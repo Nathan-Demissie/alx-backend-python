@@ -12,3 +12,10 @@ class DatabaseConnection:
     def __exit__(self, exc_type, exc_value, traceback):
         if self.conn:
             self.conn.close()
+
+# ✅ Use the context manager to perform the query and print results
+with DatabaseConnection('users.db') as conn:
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM users")
+    results = cursor.fetchall()
+    print(results)
