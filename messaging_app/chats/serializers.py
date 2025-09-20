@@ -7,10 +7,18 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['user_id', 'first_name', 'last_name', 'email', 'phone_number', 'role', 'full_name']
+        fields = [
+            'user_id', 'first_name', 'last_name',
+            'email', 'phone_number', 'role', 'full_name'
+        ]
 
     def get_full_name(self, obj):
         return f"{obj.first_name} {obj.last_name}"
+
+    def validate_role(self, value):
+        if value not in ['guest', 'host', 'admin']:
+            raise serializers.ValidationError("Invalid role")
+        return value
 
 
 class MessageSerializer(serializers.ModelSerializer):
