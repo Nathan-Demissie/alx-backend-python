@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 """
-Unit tests for GithubOrgClient class in client.py
+Unit and integration tests for GithubOrgClient class in client.py
 """
 
 import unittest
-from unittest.mock import patch, PropertyMock
-from parameterized import parameterized
+from unittest.mock import patch, PropertyMock, Mock
+from parameterized import parameterized, parameterized_class
 from client import GithubOrgClient
+from fixtures import org_payload, repos_payload, expected_repos, apache2_repos
 
 
 class TestGithubOrgClient(unittest.TestCase):
@@ -61,10 +62,6 @@ class TestGithubOrgClient(unittest.TestCase):
             mock_get_json.assert_called_once_with(
                 "https://api.github.com/orgs/test/repos"
             )
-from parameterized import parameterized
-
-class TestGithubOrgClient(unittest.TestCase):
-    # ... previous tests ...
 
     @parameterized.expand([
         ({"license": {"key": "my_license"}}, "my_license", True),
@@ -76,12 +73,6 @@ class TestGithubOrgClient(unittest.TestCase):
         result = client.has_license(repo, license_key)
         self.assertEqual(result, expected)
 
-from unittest import TestCase
-from unittest.mock import patch, Mock
-from parameterized import parameterized_class
-from client import GithubOrgClient
-from fixtures import org_payload, repos_payload, expected_repos, apache2_repos
-
 
 @parameterized_class([
     {
@@ -91,14 +82,13 @@ from fixtures import org_payload, repos_payload, expected_repos, apache2_repos
         "apache2_repos": apache2_repos,
     }
 ])
-class TestIntegrationGithubOrgClient(TestCase):
+class TestIntegrationGithubOrgClient(unittest.TestCase):
     """Integration tests for GithubOrgClient.public_repos"""
 
     @classmethod
     def setUpClass(cls):
         """Start patcher and set side_effect for requests.get"""
-        cls.get_patcher = patch("requests.get")
-
+        cls.get_patcher = patch("client.requests.get")
         mock_get = cls.get_patcher.start()
         mock_get.side_effect = [
             Mock(json=Mock(return_value=cls.org_payload)),
@@ -122,4 +112,3 @@ class TestIntegrationGithubOrgClient(TestCase):
             client.public_repos(license="apache-2.0"),
             self.apache2_repos
         )
-
