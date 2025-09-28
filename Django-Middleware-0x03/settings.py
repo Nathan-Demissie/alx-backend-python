@@ -27,25 +27,16 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    # ✅ Custom Middleware
     'chats.middleware.RequestLoggingMiddleware',
     'chats.middleware.RestrictAccessByTimeMiddleware',
     'chats.middleware.OffensiveLanguageMiddleware',
-    'chats.middleware.RolePermissionMiddleware',
-    'chats.middleware.RequestLoggingMiddleware',
-    'chats.middleware.RequestLoggingMiddleware',
-    'chats.middleware.RestrictAccessByTimeMiddleware',
-    'chats.middleware.OffensiveLanguageMiddleware',
-    'chats.middleware.RolePermissionMiddleware',
-
-
-]
-
-
+    'chats.middleware.RolepermissionMiddleware',
 ]
 
 ROOT_URLCONF = 'Django_Middleware_0x03.urls'
 
-TEMPLATES = [...]
 WSGI_APPLICATION = 'Django_Middleware_0x03.wsgi.application'
 
 DATABASES = {
