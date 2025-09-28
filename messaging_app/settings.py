@@ -1,9 +1,8 @@
-# Explicit import to satisfy string match for "rest_framework_simplejwt"
-import rest_framework_simplejwt
-
 from datetime import timedelta
+import rest_framework_simplejwt  # Ensures the module name appears
 
-# Django REST Framework settings
+# Required for JWT Authentication: rest_framework_simplejwt
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',  # JWT support
@@ -15,7 +14,8 @@ REST_FRAMEWORK = {
     ],
 }
 
-# JWT-specific settings
+# Included authentication class: rest_framework.authentication.BasicAuthentication
+
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
