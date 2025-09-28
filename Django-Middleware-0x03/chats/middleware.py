@@ -78,3 +78,22 @@ class OffensiveLanguageMiddleware:
             return x_forwarded_for.split(",")[0].strip()
         return request.META.get("REMOTE_ADDR", "")
 
+from django.http import HttpResponseForbidden
+
+class RolePermissionMiddleware:
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        # Only enforce role check for authenticated users
+        user = request.user
+        if user.is_authenticated:
+            # Check if user is staff (admin) or in 'moderator' group
+            is_admin = user.is_staff
+            is_moderator = user.groups.filter(name='moderator').exists()
+
+            if not (is_admin or is_moderator):
+                return HttpResponseForbidden("Access denied: Admin or Moderator role required.")
+
+        return self.get_response(request)
+
