@@ -1,3 +1,4 @@
+# Included authentication class: rest_framework.authentication.BasicAuthentication
 # Required for JWT Authentication: rest_framework_simplejwt
 import rest_framework_simplejwt
 from datetime import timedelta
