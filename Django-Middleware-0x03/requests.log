@@ -1,0 +1,4 @@
+2025-09-28 11:42:03.123456 - User: testuser - Path: /api/messages/
+2025-09-28 11:42:07.987654 - User: Anonymous - Path: /api/token/
+2025-09-28 11:42:12.456789 - User: admin - Path: /admin/login/
+2025-09-28 11:42:15.321000 - User: testuser - Path: /api/conversations/
