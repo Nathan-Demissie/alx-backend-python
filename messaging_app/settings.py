@@ -2,6 +2,10 @@
 import rest_framework_simplejwt
 from datetime import timedelta
 
+INSTALLED_APPS = [
+    ...
+    'django_filters',
+]
 # Django REST Framework settings
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
