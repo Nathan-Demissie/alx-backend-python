@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.cache import cache_page
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from messaging.models import Message
@@ -29,6 +30,7 @@ def threaded_conversation_view(request):
         'threaded_data': threaded_data
     })
 
+@cache_page(60)  # ✅ Cache this view for 60 seconds
 @login_required
 def unread_inbox_view(request):
     # ✅ Use custom manager and apply .only() directly in the view to pass the check
