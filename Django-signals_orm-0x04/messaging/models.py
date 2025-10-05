@@ -7,6 +7,13 @@ class Message(models.Model):
     content = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
     edited = models.BooleanField(default=False)  # Tracks if message was edited
+    edited_by = models.ForeignKey(  # Tracks who edited the message
+        User,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='edited_messages'
+    )
 
     def __str__(self):
         return f"From {self.sender.username} to {self.receiver.username} at {self.timestamp}"
