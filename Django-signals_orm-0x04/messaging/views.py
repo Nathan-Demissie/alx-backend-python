@@ -28,3 +28,12 @@ def threaded_conversation_view(request):
     return render(request, 'messaging/threaded_conversation.html', {
         'threaded_data': threaded_data
     })
+
+@login_required
+def unread_inbox_view(request):
+    # Use custom manager to get unread messages for the user
+    unread_messages = Message.unread.for_user(request.user)
+
+    return render(request, 'messaging/unread_inbox.html', {
+        'unread_messages': unread_messages
+    })
