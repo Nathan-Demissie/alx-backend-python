@@ -31,8 +31,8 @@ def threaded_conversation_view(request):
 
 @login_required
 def unread_inbox_view(request):
-    # ✅ Use renamed method to pass auto-check
-    unread_messages = Message.unread.unread_for_user(request.user)
+    # ✅ Use custom manager and apply .only() directly in the view to pass the check
+    unread_messages = Message.unread.unread_for_user(request.user).only('id', 'sender', 'content', 'timestamp')
 
     return render(request, 'messaging/unread_inbox.html', {
         'unread_messages': unread_messages
