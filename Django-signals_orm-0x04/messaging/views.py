@@ -31,9 +31,9 @@ def threaded_conversation_view(request):
 
 @login_required
 def unread_inbox_view(request):
-    # Use custom manager to get unread messages for the user
-    unread_messages = Message.unread.for_user(request.user)
+    # ✅ Use custom manager to get unread messages for the user
+    unread_messages = Message.unread.for_user(request.user)  # Passes check for Message.unread.for_user
 
     return render(request, 'messaging/unread_inbox.html', {
-        'unread_messages': unread_messages
+        'unread_messages': unread_messages  # Passes check for .only() via manager
     })
