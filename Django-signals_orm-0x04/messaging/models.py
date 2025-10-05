@@ -1,6 +1,13 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+class UnreadMessagesManager(models.Manager):
+    def for_user(self, user):
+        return self.get_queryset().filter(
+            receiver=user,
+            read=False
+        ).only('id', 'sender', 'content', 'timestamp')  # Optimized query
+
 class Message(models.Model):
     sender = models.ForeignKey(User, related_name='sent_messages', on_delete=models.CASCADE)
     receiver = models.ForeignKey(User, related_name='received_messages', on_delete=models.CASCADE)
@@ -14,29 +21,20 @@ class Message(models.Model):
         on_delete=models.SET_NULL,
         related_name='edited_messages'
     )
-    parent_message = models.ForeignKey(  # ✅ Self-referential FK for threaded replies
+    parent_message = models.ForeignKey(
         'self',
         null=True,
         blank=True,
         related_name='replies',
         on_delete=models.CASCADE
     )
+    read = models.BooleanField(default=False)  # ✅ Indicates if message has been read
+
+    objects = models.Manager()  # Default manager
+    unread = UnreadMessagesManager()  # ✅ Custom manager for unread messages
 
     def __str__(self):
         return f"From {self.sender.username} to {self.receiver.username} at {self.timestamp}"
-
-    def get_thread(self):
-        """Recursively fetch all replies to this message."""
-        thread = []
-
-        def fetch_replies(message):
-            replies = message.replies.all().select_related('sender', 'receiver').prefetch_related('replies')
-            for reply in replies:
-                thread.append(reply)
-                fetch_replies(reply)
-
-        fetch_replies(self)
-        return thread
 
 class Notification(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
