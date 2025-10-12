@@ -1,3 +1,5 @@
+docker run -p 8000:8000 messaging_app_image
+
 # Use official Python base image
 FROM python:3.10
 
