@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# Script: kubctl-0x03
+# Purpose: Apply rolling update and monitor for downtime
+
+echo "🚀 Applying updated blue deployment with image version 2.0..."
+kubectl apply -f blue_deployment.yaml
+
+echo "⏳ Monitoring rollout status..."
+kubectl rollout status deployment/django-blue
+
+echo "🔁 Sending continuous requests to test for downtime..."
+for i in {1..10}; do
+  curl -s http://localhost:8000/api/ || echo "❌ Request failed"
+  sleep 2
+done
+
+echo "📦 Verifying current pods..."
+kubectl get pods -l app=messaging
+
+echo "✅ Rolling update complete."
