@@ -1,0 +1,22 @@
+#!/bin/bash
+
+# Script: kubctl-0x01
+# Purpose: Scale Django app deployment, verify pods, load test, and monitor resource usage
+
+echo "📦 Scaling Django app deployment to 3 replicas..."
+kubectl scale deployment django-messaging-app --replicas=3
+
+echo "⏳ Waiting for pods to stabilize..."
+sleep 10
+
+echo "🔍 Verifying running pods..."
+kubectl get pods -l app=messaging
+
+echo "📊 Monitoring resource usage..."
+kubectl top pods
+
+echo "🚀 Performing load test using wrk..."
+# Replace <service-ip> with the actual ClusterIP or use port-forwarding if needed
+wrk -t4 -c100 -d30s http://localhost:8000
+
+echo "✅ Scaling and testing complete."
