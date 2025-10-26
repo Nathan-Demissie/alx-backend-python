@@ -3,27 +3,31 @@ pipeline {
 
     environment {
         VENV = 'venv'
+        REPO_URL = 'https://github.com/your-username/alx-backend-python.git'
+        BRANCH = 'main'
     }
 
     stages {
         stage('Checkout') {
             steps {
-                git credentialsId: 'your-github-credentials-id',
-                    url: 'https://github.com/your-username/alx-backend-python.git',
-                    branch: 'main'
+                echo "Cloning branch: ${BRANCH}"
+                git credentialsId: 'your-github-credentials-id', url: "${REPO_URL}", branch: "${BRANCH}"
+                sh 'git branch'
             }
         }
 
         stage('Setup Python Environment') {
             steps {
+                echo "Creating virtual environment and installing dependencies"
                 sh 'python3 -m venv $VENV'
-                sh './$VENV/bin/pip install --upgrade pip'
-                sh './$VENV/bin/pip install -r messaging_app/requirements.txt'
+                sh './$VENV/bin/pip3 install --upgrade pip'
+                sh './$VENV/bin/pip3 install -r messaging_app/requirements.txt'
             }
         }
 
         stage('Run Tests') {
             steps {
+                echo "Running pytest and generating report"
                 sh './$VENV/bin/pytest messaging_app/tests/ --junitxml=report.xml'
             }
         }
